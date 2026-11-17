@@ -1,3 +1,4 @@
+import NewsPanel from './NewsPanel';
 import { useEffect, useState } from 'react';
 import { Activity, ChartNoAxesCombined, Search, ShieldCheck } from 'lucide-react';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
@@ -25,6 +26,7 @@ export default function App() {
   const [ticker,setTicker] = useState('AAPL');
   const [period,setPeriod] = useState('1y');
   const [result,setResult] = useState(null);
+  const [newsSymbol,setNewsSymbol] = useState(null);
   const [error,setError] = useState('');
   const [loading,setLoading] = useState(false);
   useEffect(()=>{
@@ -35,7 +37,7 @@ export default function App() {
     return ()=>controller.abort();
   },[]);
   async function search(e) {
-    e.preventDefault();setError('');setResult(null);
+    e.preventDefault();setError('');setResult(null);setNewsSymbol(null);
     const symbol=ticker.trim().toUpperCase();
     if(!/^[A-Z0-9^][A-Z0-9.^-]{0,19}$/.test(symbol)){setError('Enter a valid ticker, such as AAPL or RELIANCE.NS');return;}
     setLoading(true);
@@ -43,15 +45,15 @@ export default function App() {
       const response=await fetch(`${API}/api/v1/stocks/${encodeURIComponent(symbol)}?period=${period}`);
       const data=await response.json();
       if(!response.ok)throw Error(typeof data.detail==='string'?data.detail:`Request failed: HTTP ${response.status}`);
-      setResult(data);
+      setResult(data);setNewsSymbol(symbol);
     } catch(e) {setError(e instanceof TypeError?'Cannot reach FastAPI. Check port 8000 and CORS.':e.message)}
     finally {setLoading(false)}
   }
   const indicators=result?.indicators;
   return <main className="shell">
-    <header><div className="brand"><ChartNoAxesCombined size={30}/><span>Agent<span className="accent">Vest</span></span></div><span className="tag">Major Project · Phase 3</span></header>
+    <header><div className="brand"><ChartNoAxesCombined size={30}/><span>Agent<span className="accent">Vest</span></span></div><span className="tag">Major Project · Phase 4</span></header>
     <section className="hero"><p className="eyebrow">MULTI-AGENT INVESTMENT RESEARCH</p><h1>Financial intelligence,<br/><span className="accent">built on evidence.</span></h1>
-      <p>Explore historical stock prices and technical indicators. News, financial filings, and AI synthesis will be added in subsequent phases.</p>
+      <p>Explore historical stock prices and technical indicators. Financial news sentiment is now included; financial filings and AI synthesis follow in later phases.</p>
       <form onSubmit={search}><Search size={20}/><input aria-label="Stock ticker" value={ticker} onChange={e=>setTicker(e.target.value)} placeholder="AAPL or RELIANCE.NS" required />
         <select aria-label="History period" value={period} onChange={e=>setPeriod(e.target.value)}><option value="6mo">6 months</option><option value="1y">1 year</option><option value="2y">2 years</option><option value="5y">5 years</option></select>
         <button type="submit" disabled={loading}>{loading?'Loading...':'Analyze stock'}</button></form>
@@ -67,7 +69,8 @@ export default function App() {
       <div className="chart-grid"><Plot data={result.history} title="RSI (14)" height={230} lines={[{key:'rsi14',name:'RSI',color:'#ffca74'}]}/><Plot data={result.history} title="MACD" height={230} lines={[{key:'macd',name:'MACD',color:'#68e0bc'},{key:'macd_signal',name:'Signal',color:'#ffca74'}]}/></div>
       <section className="panel"><h3>Technical research summary</h3><ul>{result.summary.map((s,i)=><li key={i}>{s}</li>)}</ul><p className="subtle">{result.disclaimer}</p></section>
     </section>}
-    <section className="cards"><article><Activity/><h3>Price Analysis</h3><p>Technical indicators and risk metrics</p><small>Phase 3 · Implemented</small></article><article><Search/><h3>News Intelligence</h3><p>Financial headlines and sentiment</p><small>Phase 4</small></article><article><ShieldCheck/><h3>Report Research</h3><p>Evidence-backed financial report Q&A</p><small>Phase 5</small></article></section>
+    {newsSymbol && <NewsPanel symbol={newsSymbol} />}
+    <section className="cards"><article><Activity/><h3>Price Analysis</h3><p>Technical indicators and risk metrics</p><small>Phase 3 · Implemented</small></article><article><Search/><h3>News Intelligence</h3><p>Financial headlines and sentiment</p><small>Phase 4 · Implemented</small></article><article><ShieldCheck/><h3>Report Research</h3><p>Evidence-backed financial report Q&A</p><small>Phase 5</small></article></section>
     <footer>Backend status: <span className={health==='Connected'?'good':'muted'}>{health}</span> · Historical technical research only, not financial advice.</footer>
   </main>;
 }
