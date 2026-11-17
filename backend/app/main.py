@@ -1,13 +1,13 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
 from app.core.config import settings
 
 # Import API routers
 from app.api.routes.health import router as health_router
 from app.api.routes.stocks import router as stocks_router
 from app.api.routes.news import router as news_router
+from app.api.routes.reports import router as reports_router
 
 
 # Initialize FastAPI
@@ -16,9 +16,11 @@ app = FastAPI(
     description=(
         "AgentVest - Multi-Agent Investment Research Platform. "
         "Phase 3: Stock Price Analysis. "
-        "Phase 4: Financial News Sentiment Analysis."
+        "Phase 4: Financial News Sentiment Analysis. "
+        "Phase 5: Financial Report Analysis using RAG, "
+        "Astra DB, Sentence Transformers, and Google Gemini."
     ),
-    version="0.4.0",
+    version="0.5.0",
 )
 
 
@@ -37,7 +39,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
     allow_credentials=False,
-    allow_methods=["GET", "OPTIONS"],
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -46,6 +48,7 @@ app.add_middleware(
 app.include_router(health_router)
 app.include_router(stocks_router)
 app.include_router(news_router)
+app.include_router(reports_router)
 
 
 # Root endpoint
@@ -53,12 +56,12 @@ app.include_router(news_router)
 def root():
     return {
         "message": "Welcome to AgentVest API",
-        "version": "0.4.0",
+        "version": "0.5.0",
         "status": "running",
         "features": {
             "stock_price_analysis": "available",
             "financial_news_analysis": "available",
-            "financial_report_analysis": "planned",
+            "financial_report_analysis": "beta",
             "multi_agent_advisor": "planned",
         },
         "documentation": "/docs",

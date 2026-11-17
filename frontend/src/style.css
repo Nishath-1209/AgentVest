@@ -1,5 +1,681 @@
-*{box-sizing:border-box}body{margin:0;background:#0b1020;color:#eef2ff;font-family:Inter,system-ui,Arial,sans-serif}.shell{max-width:1100px;margin:auto;padding:28px 24px}header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #293247;padding-bottom:22px}.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:25px}.accent{color:#68e0bc}.tag{color:#aebbd4;font-size:13px}.hero{padding:95px 0 65px}.eyebrow{color:#68e0bc;letter-spacing:2px;font-size:12px;font-weight:700}h1{font-size:clamp(40px,6vw,68px);line-height:1.12;margin:15px 0 20px}.hero>p:not(.eyebrow){color:#aebbd4;max-width:660px;line-height:1.8}form{display:flex;align-items:center;gap:12px;background:#171f32;border:1px solid #334057;border-radius:14px;padding:9px 9px 9px 17px;max-width:650px;margin-top:34px}input{flex:1;min-width:0;background:transparent;color:white;border:0;outline:0;font-size:16px}button{border:0;background:#68e0bc;color:#07191a;font-weight:750;padding:15px 22px;border-radius:9px;cursor:pointer}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.cards article{background:#151e30;border:1px solid #29364d;border-radius:16px;padding:25px}.cards svg{color:#68e0bc}.cards p{color:#aebbd4;font-size:14px}.cards small{color:#68e0bc}footer{margin-top:65px;padding:22px 0;border-top:1px solid #293247;color:#9daac4;font-size:13px}.good{color:#68e0bc}.muted{color:#ffbf80}.notice,.error{max-width:650px;margin-top:18px;padding:15px;background:#1c3040;border-radius:10px;color:#bce9dc}.error{background:#42202d;color:#ffb4b4}@media(max-width:700px){.cards{grid-template-columns:1fr}.hero{padding-top:60px}form{flex-wrap:wrap}button{width:100%}}
 
-select{background:#172337;color:#eef2ff;border:1px solid #334057;border-radius:8px;padding:12px}button:disabled{opacity:.6;cursor:wait}.results{margin-bottom:55px}.result-heading{display:flex;align-items:center;justify-content:space-between;gap:15px}.result-heading h2{font-size:32px;margin:4px 0}.subtle{color:#aebbd4;font-size:13px}.trend{text-transform:capitalize;background:#1c3040;color:#68e0bc;padding:10px 14px;border-radius:9px}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:24px 0}.metrics article,.panel{background:#151e30;border:1px solid #29364d;border-radius:14px;padding:20px}.metrics small{display:block;color:#aebbd4;margin-bottom:9px}.metrics strong{font-size:21px}.panel{margin:16px 0}.panel h3{margin-top:0}.panel li{margin:9px 0;color:#d2dced}.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:800px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.chart-grid{grid-template-columns:1fr}}@media(max-width:550px){.metrics{grid-template-columns:1fr}.result-heading{align-items:flex-start;flex-direction:column}}
+/* ==========================================================
+   AGENTVEST — COMPLETE STYLESHEET
+   Phase 3: Stock Price Analysis
+   Phase 4: Financial News Intelligence
+   Phase 5: Financial Report Analysis (RAG + Gemini)
+   ========================================================== */
 
-.news-panel{margin:25px 0 45px}.news-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.news-stats>div{padding:16px;background:#0e1727;border-radius:10px}.news-stats small{display:block;color:#aebbd4}.news-stats strong{display:block;margin-top:8px;text-transform:capitalize;font-size:20px}.news-articles{display:grid;gap:12px}.news-articles article{padding:16px;background:#101a2b;border:1px solid #29364d;border-radius:10px}.news-articles h4{margin:10px 0}.news-articles a{color:#eef2ff}.news-articles p{color:#aebbd4;font-size:14px;line-height:1.6}.news-meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#aebbd4;font-size:12px}.sentiment{text-transform:capitalize;font-weight:700}.sentiment.positive{color:#68e0bc}.sentiment.negative{color:#ff9090}.sentiment.neutral{color:#ffca74}@media(max-width:600px){.news-stats{grid-template-columns:1fr}}
+
+/* ==========================================================
+   1. GLOBAL STYLES
+   ========================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #0b1020;
+  color: #eef2ff;
+  font-family: Inter, system-ui, Arial, sans-serif;
+}
+
+.shell {
+  max-width: 1100px;
+  margin: auto;
+  padding: 28px 24px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid #293247;
+  padding-bottom: 22px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 800;
+  font-size: 25px;
+}
+
+.accent {
+  color: #68e0bc;
+}
+
+.tag {
+  color: #aebbd4;
+  font-size: 13px;
+}
+
+
+/* ==========================================================
+   2. HERO SECTION
+   ========================================================== */
+
+.hero {
+  padding: 95px 0 65px;
+}
+
+.eyebrow {
+  color: #68e0bc;
+  letter-spacing: 2px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: clamp(40px, 6vw, 68px);
+  line-height: 1.12;
+  margin: 15px 0 20px;
+}
+
+.hero > p:not(.eyebrow) {
+  color: #aebbd4;
+  max-width: 660px;
+  line-height: 1.8;
+}
+
+
+/* ==========================================================
+   3. GLOBAL FORMS AND BUTTONS
+   ========================================================== */
+
+form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #171f32;
+  border: 1px solid #334057;
+  border-radius: 14px;
+  padding: 9px 9px 9px 17px;
+  max-width: 650px;
+  margin-top: 34px;
+}
+
+input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  color: white;
+  border: 0;
+  outline: 0;
+  font-size: 16px;
+}
+
+button {
+  border: 0;
+  background: #68e0bc;
+  color: #07191a;
+  font-weight: 750;
+  padding: 15px 22px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+button:hover:not(:disabled) {
+  background: #8aebce;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+select {
+  background: #172337;
+  color: #eef2ff;
+  border: 1px solid #334057;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+
+/* ==========================================================
+   4. FEATURE CARDS
+   ========================================================== */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.cards article {
+  background: #151e30;
+  border: 1px solid #29364d;
+  border-radius: 16px;
+  padding: 25px;
+}
+
+.cards svg {
+  color: #68e0bc;
+}
+
+.cards p {
+  color: #aebbd4;
+  font-size: 14px;
+}
+
+.cards small {
+  color: #68e0bc;
+}
+
+
+/* ==========================================================
+   5. NOTIFICATIONS AND ERRORS
+   ========================================================== */
+
+.good {
+  color: #68e0bc;
+}
+
+.muted {
+  color: #ffbf80;
+}
+
+.notice,
+.error {
+  max-width: 650px;
+  margin-top: 18px;
+  padding: 15px;
+  background: #1c3040;
+  border-radius: 10px;
+  color: #bce9dc;
+}
+
+.error {
+  background: #42202d;
+  color: #ffb4b4;
+}
+
+
+/* ==========================================================
+   6. PHASE 3 — STOCK ANALYSIS RESULTS
+   ========================================================== */
+
+.results {
+  margin-bottom: 55px;
+}
+
+.result-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.result-heading h2 {
+  font-size: 32px;
+  margin: 4px 0;
+}
+
+.subtle {
+  color: #aebbd4;
+  font-size: 13px;
+}
+
+.trend {
+  text-transform: capitalize;
+  background: #1c3040;
+  color: #68e0bc;
+  padding: 10px 14px;
+  border-radius: 9px;
+}
+
+
+/* ==========================================================
+   7. STOCK METRICS
+   ========================================================== */
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.metrics article,
+.panel {
+  background: #151e30;
+  border: 1px solid #29364d;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.metrics small {
+  display: block;
+  color: #aebbd4;
+  margin-bottom: 9px;
+}
+
+.metrics strong {
+  font-size: 21px;
+}
+
+.panel {
+  margin: 16px 0;
+}
+
+.panel h3 {
+  margin-top: 0;
+}
+
+.panel li {
+  margin: 9px 0;
+  color: #d2dced;
+}
+
+
+/* ==========================================================
+   8. STOCK CHARTS
+   ========================================================== */
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+
+/* ==========================================================
+   9. PHASE 4 — FINANCIAL NEWS INTELLIGENCE
+   ========================================================== */
+
+.news-panel {
+  margin: 25px 0 45px;
+}
+
+.news-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.news-stats > div {
+  padding: 16px;
+  background: #0e1727;
+  border-radius: 10px;
+}
+
+.news-stats small {
+  display: block;
+  color: #aebbd4;
+}
+
+.news-stats strong {
+  display: block;
+  margin-top: 8px;
+  text-transform: capitalize;
+  font-size: 20px;
+}
+
+.news-articles {
+  display: grid;
+  gap: 12px;
+}
+
+.news-articles article {
+  padding: 16px;
+  background: #101a2b;
+  border: 1px solid #29364d;
+  border-radius: 10px;
+}
+
+.news-articles h4 {
+  margin: 10px 0;
+}
+
+.news-articles a {
+  color: #eef2ff;
+}
+
+.news-articles a:hover {
+  color: #68e0bc;
+}
+
+.news-articles p {
+  color: #aebbd4;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.news-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: #aebbd4;
+  font-size: 12px;
+}
+
+.sentiment {
+  text-transform: capitalize;
+  font-weight: 700;
+}
+
+.sentiment.positive {
+  color: #68e0bc;
+}
+
+.sentiment.negative {
+  color: #ff9090;
+}
+
+.sentiment.neutral {
+  color: #ffca74;
+}
+
+
+/* ==========================================================
+   10. PHASE 5 — FINANCIAL REPORT ANALYSIS
+   ========================================================== */
+
+.report-panel {
+  margin: 25px 0 45px;
+  padding: 25px;
+  background: #151e30;
+  border: 1px solid #29364d;
+  border-radius: 16px;
+  color: #eef2ff;
+}
+
+.report-panel h2 {
+  margin: 0 0 12px;
+  color: #eef2ff;
+  font-size: 26px;
+}
+
+.report-panel > p {
+  color: #aebbd4;
+  line-height: 1.7;
+}
+
+
+/* ==========================================================
+   11. REPORT UPLOAD FORM
+   ========================================================== */
+
+.report-panel form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+  max-width: none;
+  margin-top: 22px;
+  padding: 20px;
+  background: #0e1727;
+  border: 1px solid #29364d;
+  border-radius: 12px;
+}
+
+.report-panel label {
+  color: #d2dced;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.report-panel input,
+.report-panel textarea {
+  display: block;
+  flex: none;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  background: #172337;
+  color: #eef2ff;
+  border: 1px solid #334057;
+  border-radius: 9px;
+  font: inherit;
+  outline: none;
+}
+
+.report-panel input:focus,
+.report-panel textarea:focus {
+  border-color: #68e0bc;
+  box-shadow: 0 0 0 2px rgba(104, 224, 188, 0.12);
+}
+
+.report-panel input::placeholder,
+.report-panel textarea::placeholder {
+  color: #8392ae;
+}
+
+.report-panel input[type="file"] {
+  cursor: pointer;
+}
+
+.report-panel input[type="file"]::file-selector-button {
+  margin-right: 14px;
+  padding: 9px 12px;
+  background: #29364d;
+  color: #eef2ff;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.report-panel textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.report-panel button {
+  align-self: flex-start;
+  width: auto;
+  padding: 13px 20px;
+  background: #68e0bc;
+  color: #07191a;
+  border: 0;
+  border-radius: 9px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.report-panel button:hover:not(:disabled) {
+  background: #8aebce;
+}
+
+.report-panel button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+
+/* ==========================================================
+   12. PDF UPLOAD SUCCESS
+   ========================================================== */
+
+.report-success {
+  margin-top: 20px;
+  padding: 18px;
+  background: #12372f;
+  color: #bce9dc;
+  border: 1px solid #285d4c;
+  border-radius: 10px;
+}
+
+.report-success h3 {
+  margin-top: 0;
+  color: #68e0bc;
+}
+
+.report-success p {
+  margin: 9px 0;
+  overflow-wrap: anywhere;
+}
+
+
+/* ==========================================================
+   13. REPORT ERROR MESSAGE
+   ========================================================== */
+
+.report-error {
+  margin-top: 16px;
+  padding: 14px;
+  background: #42202d;
+  color: #ffb4b4;
+  border: 1px solid #754054;
+  border-radius: 9px;
+}
+
+
+/* ==========================================================
+   14. GEMINI AI ANSWER
+   ========================================================== */
+
+.report-answer {
+  margin-top: 24px;
+  padding: 22px;
+  background: #0e1727;
+  border: 1px solid #29364d;
+  border-radius: 12px;
+}
+
+.report-answer h3 {
+  margin-top: 0;
+  color: #68e0bc;
+}
+
+.report-answer-text {
+  color: #d2dced;
+  white-space: pre-wrap;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+
+/* ==========================================================
+   15. SOURCE CITATIONS
+   ========================================================== */
+
+.report-sources {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #29364d;
+}
+
+.report-sources h4 {
+  color: #68e0bc;
+  margin-bottom: 14px;
+}
+
+.report-sources > div {
+  padding: 15px;
+  margin-bottom: 12px;
+  background: #172337;
+  border: 1px solid #29364d;
+  border-radius: 10px;
+}
+
+.report-sources strong {
+  color: #eef2ff;
+}
+
+.report-sources p {
+  color: #aebbd4;
+  font-size: 14px;
+  margin: 7px 0;
+  overflow-wrap: anywhere;
+}
+
+
+/* ==========================================================
+   16. FOOTER
+   ========================================================== */
+
+footer {
+  margin-top: 65px;
+  padding: 22px 0;
+  border-top: 1px solid #293247;
+  color: #9daac4;
+  font-size: 13px;
+}
+
+
+/* ==========================================================
+   17. RESPONSIVE DESIGN — TABLETS
+   ========================================================== */
+
+@media (max-width: 800px) {
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ==========================================================
+   18. RESPONSIVE DESIGN — MOBILE
+   ========================================================== */
+
+@media (max-width: 700px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding-top: 60px;
+  }
+
+  form {
+    flex-wrap: wrap;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .report-panel button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .news-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .report-panel {
+    padding: 16px;
+  }
+
+  .report-panel form {
+    padding: 14px;
+  }
+
+  .report-panel h2 {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 550px) {
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .result-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .shell {
+    padding: 20px 16px;
+  }
+
+  .brand {
+    font-size: 21px;
+  }
+}
