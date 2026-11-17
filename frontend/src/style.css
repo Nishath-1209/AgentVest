@@ -679,3 +679,198 @@ footer {
     font-size: 21px;
   }
 }
+
+/* Phase 6 — Multi-Agent Investment Advisor */
+
+.advisor-panel {
+  margin: 25px 0 45px;
+  padding: 25px;
+  background: #151e30;
+  border: 1px solid #29364d;
+  border-radius: 16px;
+}
+
+.advisor-panel h2 {
+  margin-top: 0;
+  font-size: 26px;
+}
+
+.advisor-panel > p {
+  color: #aebbd4;
+  line-height: 1.7;
+}
+
+.advisor-panel form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  max-width: none;
+  padding: 20px;
+  background: #0e1727;
+  border: 1px solid #29364d;
+  border-radius: 12px;
+}
+
+.advisor-panel label {
+  color: #d2dced;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.advisor-panel form > input,
+.advisor-panel form > select {
+  width: 100%;
+  padding: 13px;
+  background: #172337;
+  color: #eef2ff;
+  border: 1px solid #334057;
+  border-radius: 9px;
+}
+
+.advisor-panel form > input {
+  flex: none;
+}
+
+.advisor-panel .advisor-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.advisor-checkbox input {
+  flex: none;
+  width: 17px;
+  height: 17px;
+  accent-color: #68e0bc;
+}
+
+.advisor-panel form button {
+  align-self: flex-start;
+}
+
+.advisor-results {
+  margin-top: 25px;
+}
+
+.advisor-summary {
+  padding: 22px;
+  background: #12372f;
+  border: 1px solid #285d4c;
+  border-radius: 12px;
+}
+
+.advisor-summary small {
+  color: #aebbd4;
+}
+
+.advisor-summary h3 {
+  color: #68e0bc;
+  font-size: 25px;
+  margin: 10px 0;
+}
+
+.advisor-summary p {
+  color: #d2dced;
+  line-height: 1.6;
+}
+
+.advisor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.advisor-grid article,
+.advisor-detail {
+  background: #0e1727;
+  border: 1px solid #29364d;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.advisor-grid small {
+  color: #aebbd4;
+}
+
+.advisor-grid h3 {
+  color: #68e0bc;
+  text-transform: capitalize;
+}
+
+.advisor-grid p,
+.advisor-detail p,
+.advisor-detail li {
+  color: #d2dced;
+  line-height: 1.7;
+}
+
+.advisor-detail {
+  margin-top: 18px;
+}
+
+.advisor-detail h3 {
+  margin-top: 0;
+}
+
+.advisor-report-answer {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.advisor-sources {
+  border-top: 1px solid #29364d;
+  margin-top: 16px;
+  padding-top: 12px;
+}
+
+.advisor-sources p {
+  overflow-wrap: anywhere;
+}
+
+.advisor-status {
+  display: grid;
+  gap: 10px;
+}
+
+.advisor-status > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  background: #172337;
+  border-radius: 8px;
+}
+
+.advisor-warning {
+  color: #ffca74 !important;
+}
+
+.advisor-error {
+  padding: 14px;
+  background: #42202d;
+  color: #ffb4b4;
+  border-radius: 9px;
+  margin-top: 16px;
+}
+
+.advisor-disclaimer {
+  color: #aebbd4;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+@media (max-width: 700px) {
+  .advisor-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .advisor-panel {
+    padding: 16px;
+  }
+
+  .advisor-panel form button {
+    width: 100%;
+  }
+}

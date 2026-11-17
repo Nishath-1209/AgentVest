@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-
+from app.api.routes.advisor import router as advisor_router
 # Import API routers
 from app.api.routes.health import router as health_router
 from app.api.routes.stocks import router as stocks_router
@@ -49,20 +49,20 @@ app.include_router(health_router)
 app.include_router(stocks_router)
 app.include_router(news_router)
 app.include_router(reports_router)
-
+app.include_router(advisor_router)
 
 # Root endpoint
 @app.get("/", tags=["Root"])
 def root():
     return {
         "message": "Welcome to AgentVest API",
-        "version": "0.5.0",
+        "version": "0.6.0",
         "status": "running",
         "features": {
             "stock_price_analysis": "available",
             "financial_news_analysis": "available",
             "financial_report_analysis": "beta",
-            "multi_agent_advisor": "planned",
+            "multi_agent_advisor": "beta",
         },
         "documentation": "/docs",
     }
