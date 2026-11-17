@@ -7,7 +7,7 @@ from app.agents.price_agent import analyze_stock
 from app.agents.news_agent import analyze_news
 from app.agents.report_agent import analyze_financial_report
 from app.services.market_data import validate_symbol
-
+from app.agents.synthesis_agent import synthesize_research
 
 REPORT_QUESTION = (
     "Summarize the company's financial performance, "
@@ -68,6 +68,7 @@ def analyze_investment(
     days: int = 7,
     report_id: str | None = None,
     include_report: bool = True,
+    include_synthesis: bool = False,
 ) -> dict:
     """
     Coordinate independent research agents.
@@ -146,7 +147,18 @@ def analyze_investment(
     news_data = results["news"]["data"]
 
     assessment = _research_assessment(price_data, news_data)
-
+    if include_synthesis:
+        synthesis = synthesize_research(
+            symbol=ticker,
+            agents=results,
+            assessment=assessment,
+        )
+    else:
+        synthesis = {
+            "status": "skipped",
+            "data": None,
+            "error": None,
+        }
     return {
         "symbol": ticker,
         "period": period,
@@ -158,6 +170,7 @@ def analyze_investment(
             if news_data else "insufficient_data"
         ),
         "agents": results,
+        "synthesis": synthesis,
         "disclaimer": (
             "This is automated investment research, not personalized "
             "financial advice. Technical signals, news sentiment and "
