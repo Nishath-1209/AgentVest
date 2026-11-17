@@ -21,7 +21,7 @@ import {
 
 import NewsPanel from "./NewsPanel";
 import ReportPanel from "./ReportPanel";
-
+import AdvisorPanel from "./AdvisorPanel";
 // FastAPI backend URL
 const API = (
   import.meta.env.VITE_API_BASE_URL ||
@@ -450,7 +450,11 @@ export default function App() {
         key={reportTicker}
         ticker={reportTicker}
       />
-
+      {/* PHASE 6 — MULTI-AGENT INVESTMENT ADVISOR */}
+        <AdvisorPanel
+  key={reportTicker}
+  ticker={reportTicker}
+/>
       {/* PROJECT FEATURES */}
       <section className="cards">
         <article>
