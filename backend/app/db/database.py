@@ -25,13 +25,17 @@ def get_connection() -> sqlite3.Connection:
     DB_DIR.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(str(DB_PATH), check_same_thread=False)
     conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA journal_mode = WAL")
+    try:
+        conn.execute("PRAGMA journal_mode = WAL")
+    except Exception:
+        pass
     return conn
 
 
 def init_db():
-    conn = get_connection()
-    with conn:
+    try:
+        conn = get_connection()
+        with conn:
         conn.execute("""
             CREATE TABLE IF NOT EXISTS watchlist (
                 symbol TEXT PRIMARY KEY,
@@ -71,6 +75,8 @@ def init_db():
         conn.execute("CREATE INDEX IF NOT EXISTS idx_reports_ticker ON reports_meta(ticker);")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_history_symbol ON research_history(symbol);")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_history_created ON research_history(created_at DESC);")
+    except Exception as e:
+        print(f"[WARN] Database initialization: {e}")
 
 
 # ==================== REPORTS META STORE ====================

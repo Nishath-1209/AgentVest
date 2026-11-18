@@ -25,12 +25,14 @@ app = FastAPI(
 )
 
 
-# Configure CORS
+# Configure CORS safely
 raw_origins = [orig.strip() for orig in settings.frontend_origin.split(",") if orig.strip()]
+valid_origins = [o for o in raw_origins if "*" not in o or o == "*"]
 allowed_origins = list(
     set(
-        raw_origins
+        valid_origins
         + [
+            "https://agent-vest.vercel.app",
             "http://localhost:5173",
             "http://127.0.0.1:5173",
             "http://localhost:3000",
@@ -40,7 +42,7 @@ allowed_origins = list(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
+    allow_origins=allowed_origins if allowed_origins else ["*"],
     allow_origin_regex=r"^https:\/\/.*\.vercel\.app$",
     allow_credentials=False,
     allow_methods=["GET", "POST", "DELETE", "OPTIONS"],

@@ -1,5 +1,7 @@
 
 from functools import lru_cache
+import os
+import requests
 from uuid import uuid4
 
 from astrapy import DataAPIClient
@@ -17,6 +19,30 @@ VECTOR_DIMENSION = 384
 def get_embedding_model():
     from sentence_transformers import SentenceTransformer
     return SentenceTransformer(EMBEDDING_MODEL)
+
+
+def query_hf_embeddings(texts: list[str]) -> list[list[float]] | None:
+    """
+    Remote serverless embedding inference on Hugging Face (0 MB local RAM on Render Free).
+    Generates exact 384-dimensional dense vectors using all-MiniLM-L6-v2.
+    """
+    token = settings.hf_token or os.getenv("HF_TOKEN") or os.getenv("HUGGINGFACE_API_KEY")
+    headers = {"Authorization": f"Bearer {token}"} if token else {}
+    url = f"https://api-inference.huggingface.co/pipeline/feature-extraction/{EMBEDDING_MODEL}"
+    try:
+        resp = requests.post(
+            url,
+            headers=headers,
+            json={"inputs": texts, "options": {"wait_for_model": True}},
+            timeout=15,
+        )
+        if resp.status_code == 200:
+            data = resp.json()
+            if isinstance(data, list) and len(data) == len(texts) and isinstance(data[0], list):
+                return data
+    except Exception:
+        pass
+    return None
 
 
 @lru_cache(maxsize=1)
@@ -56,6 +82,12 @@ def embed_texts(texts: list[str]) -> list[list[float]]:
     if not texts:
         return []
 
+    # Try remote serverless inference first to preserve 512 MB RAM ceiling
+    remote = query_hf_embeddings(texts)
+    if remote is not None:
+        return remote
+
+    # Fall back to local SentenceTransformer model
     model = get_embedding_model()
     vectors = model.encode(
         texts,

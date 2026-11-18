@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     finnhub_api_key: str = ""
     gemini_api_key: str = ""
     gemini_model: str = "gemini-3.5-flash-lite"
+    hf_token: str = ""
 
     astra_db_api_endpoint: str = ""
     astra_db_application_token: str = ""

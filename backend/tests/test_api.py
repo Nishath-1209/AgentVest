@@ -68,3 +68,20 @@ def test_system_status():
     assert "AstraCS:" not in raw_text
     assert "AIza" not in raw_text
 
+def test_cors_preflight_for_vercel():
+    """Verify that OPTIONS preflight requests from deployed Vercel frontend succeed."""
+    headers = {
+        "Origin": "https://agent-vest.vercel.app",
+        "Access-Control-Request-Method": "GET",
+        "Access-Control-Request-Headers": "authorization,content-type",
+    }
+    res = client.options("/health", headers=headers)
+    assert res.status_code == 200
+    assert res.headers.get("access-control-allow-origin") == "https://agent-vest.vercel.app"
+
+def test_health_fast_without_ml():
+    """Verify that /health responds immediately with status ok."""
+    res = client.get("/health")
+    assert res.status_code == 200
+    assert res.json()["status"] == "ok"
+
