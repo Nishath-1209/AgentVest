@@ -36,47 +36,48 @@ def init_db():
     try:
         conn = get_connection()
         with conn:
-        conn.execute("""
-            CREATE TABLE IF NOT EXISTS watchlist (
-                symbol TEXT PRIMARY KEY,
-                added_at TEXT NOT NULL
-            );
-        """)
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS watchlist (
+                    symbol TEXT PRIMARY KEY,
+                    added_at TEXT NOT NULL
+                );
+            """)
 
-        conn.execute("""
-            CREATE TABLE IF NOT EXISTS reports_meta (
-                report_id TEXT PRIMARY KEY,
-                ticker TEXT NOT NULL,
-                filename TEXT NOT NULL,
-                pages_extracted INTEGER NOT NULL,
-                chunks_indexed INTEGER NOT NULL,
-                uploaded_at TEXT NOT NULL
-            );
-        """)
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS reports_meta (
+                    report_id TEXT PRIMARY KEY,
+                    ticker TEXT NOT NULL,
+                    filename TEXT NOT NULL,
+                    pages_extracted INTEGER NOT NULL,
+                    chunks_indexed INTEGER NOT NULL,
+                    uploaded_at TEXT NOT NULL
+                );
+            """)
 
-        conn.execute("""
-            CREATE TABLE IF NOT EXISTS research_history (
-                id TEXT PRIMARY KEY,
-                symbol TEXT NOT NULL,
-                created_at TEXT NOT NULL,
-                period TEXT NOT NULL,
-                news_days INTEGER NOT NULL,
-                assessment TEXT NOT NULL,
-                technical_outlook TEXT NOT NULL,
-                news_sentiment TEXT NOT NULL,
-                price_status TEXT NOT NULL,
-                news_status TEXT NOT NULL,
-                report_status TEXT NOT NULL,
-                synthesis_status TEXT NOT NULL,
-                summary_json TEXT NOT NULL,
-                full_result_json TEXT NOT NULL
-            );
-        """)
-        conn.execute("CREATE INDEX IF NOT EXISTS idx_reports_ticker ON reports_meta(ticker);")
-        conn.execute("CREATE INDEX IF NOT EXISTS idx_history_symbol ON research_history(symbol);")
-        conn.execute("CREATE INDEX IF NOT EXISTS idx_history_created ON research_history(created_at DESC);")
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS research_history (
+                    id TEXT PRIMARY KEY,
+                    symbol TEXT NOT NULL,
+                    created_at TEXT NOT NULL,
+                    period TEXT NOT NULL,
+                    news_days INTEGER NOT NULL,
+                    assessment TEXT NOT NULL,
+                    technical_outlook TEXT NOT NULL,
+                    news_sentiment TEXT NOT NULL,
+                    price_status TEXT NOT NULL,
+                    news_status TEXT NOT NULL,
+                    report_status TEXT NOT NULL,
+                    synthesis_status TEXT NOT NULL,
+                    summary_json TEXT NOT NULL,
+                    full_result_json TEXT NOT NULL
+                );
+            """)
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_reports_ticker ON reports_meta(ticker);")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_history_symbol ON research_history(symbol);")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_history_created ON research_history(created_at DESC);")
     except Exception as e:
         print(f"[WARN] Database initialization: {e}")
+
 
 
 # ==================== REPORTS META STORE ====================
