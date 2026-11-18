@@ -118,7 +118,7 @@ Provide a clear, evidence-based answer.
     client = get_gemini_client()
 
     response = client.models.generate_content(
-        model="gemini-3.6-flash",
+        model=settings.gemini_model,
         contents=prompt,
     )
 

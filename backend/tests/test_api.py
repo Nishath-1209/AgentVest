@@ -50,3 +50,21 @@ def test_provider_failure(monkeypatch):
         raise MarketDataError("Provider unavailable")
     monkeypatch.setattr(stocks, "analyze_stock", fail)
     assert client.get("/api/v1/stocks/AAPL").status_code == 503
+
+def test_system_status():
+    res = client.get("/api/v1/system/status")
+    assert res.status_code == 200
+    data = res.json()
+    assert data["status"] == "ok"
+    assert "services" in data
+    assert "yfinance" in data["services"]
+    assert "finnhub" in data["services"]
+    assert "finbert" in data["services"]
+    assert "astra_db" in data["services"]
+    assert "gemini" in data["services"]
+    assert "sqlite" in data["services"]
+    # Verify no raw secrets are leaked
+    raw_text = res.text
+    assert "AstraCS:" not in raw_text
+    assert "AIza" not in raw_text
+

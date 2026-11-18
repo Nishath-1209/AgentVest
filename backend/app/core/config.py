@@ -7,11 +7,10 @@ class Settings(BaseSettings):
     environment: str = "development"
     frontend_origin: str = "http://localhost:5173"
 
-    # Phase 4
     finnhub_api_key: str = ""
-
-    # Phase 5
     gemini_api_key: str = ""
+    gemini_model: str = "gemini-3.5-flash-lite"
+
     astra_db_api_endpoint: str = ""
     astra_db_application_token: str = ""
     astra_db_keyspace: str = "default_keyspace"

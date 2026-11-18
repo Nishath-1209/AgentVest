@@ -1,4 +1,3 @@
-
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from uuid import uuid4
@@ -10,6 +9,7 @@ from fastapi import (
     Form,
     HTTPException,
     UploadFile,
+    Query,
 )
 from pydantic import BaseModel, Field
 
@@ -19,6 +19,7 @@ from app.services.pdf_processor import (
     process_pdf,
 )
 from app.services.vector_store import index_report
+from app.db.database import save_report_meta, list_reports, get_report_by_id
 
 
 # Phase 5: Financial Report API
@@ -34,6 +35,27 @@ class ReportQuestion(BaseModel):
     report_id: str | None = None
 
 
+@router.get("/list")
+@router.get("")
+def get_reports_list(ticker: str | None = Query(default=None)):
+    """
+    List previously uploaded reports metadata.
+    Can be filtered by ticker.
+    """
+    return list_reports(ticker)
+
+
+@router.get("/{report_id}")
+def get_report_details(report_id: str):
+    """
+    Retrieve metadata for a specific indexed report.
+    """
+    report = get_report_by_id(report_id)
+    if not report:
+        raise HTTPException(status_code=404, detail="Report not found")
+    return report
+
+
 @router.post("/upload")
 async def upload_report(
     file: UploadFile = File(...),
@@ -42,6 +64,7 @@ async def upload_report(
     """
     Upload a financial PDF, extract text,
     generate embeddings and index in Astra DB.
+    Also records metadata in SQLite for instant library selection.
     """
 
     ticker = ticker.strip().upper()
@@ -122,10 +145,20 @@ async def upload_report(
             ticker=ticker,
         )
 
+        # Record report metadata in SQLite
+        meta = save_report_meta(
+            report_id=result["report_id"],
+            ticker=ticker,
+            filename=filename,
+            pages_extracted=processed["pages_extracted"],
+            chunks_indexed=result["chunks_indexed"],
+        )
+
         return {
             "message": "Financial report indexed successfully",
             "pages_extracted": processed["pages_extracted"],
             **result,
+            **meta,
         }
 
     except HTTPException:
