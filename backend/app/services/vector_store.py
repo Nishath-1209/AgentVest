@@ -4,7 +4,6 @@ from uuid import uuid4
 
 from astrapy import DataAPIClient
 from astrapy.info import CollectionDefinition, CollectionVectorOptions
-from sentence_transformers import SentenceTransformer
 
 from app.core.config import settings
 
@@ -16,6 +15,7 @@ VECTOR_DIMENSION = 384
 
 @lru_cache(maxsize=1)
 def get_embedding_model():
+    from sentence_transformers import SentenceTransformer
     return SentenceTransformer(EMBEDDING_MODEL)
 
 
