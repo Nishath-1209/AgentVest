@@ -167,3 +167,47 @@ def test_invalid_parameters(period, days):
             period=period,
             days=days,
         )
+
+
+def test_advisor_with_synthesis_enabled():
+    fake_synthesis_data = {
+        "executive_summary": "Overall bullish technicals align with positive news.",
+        "supporting_evidence": ["Price > SMA50", "Positive sentiment"],
+        "conflicting_signals": [],
+        "key_risks": ["Earnings volatility"],
+        "evidence_gaps": ["Report skipped"],
+    }
+    with (
+        patch("app.agents.investment_advisor.analyze_stock", side_effect=fake_price),
+        patch("app.agents.investment_advisor.analyze_news", side_effect=fake_news),
+        patch(
+            "app.agents.investment_advisor.synthesize_research",
+            return_value={"status": "ok", "data": fake_synthesis_data, "error": None},
+        ),
+    ):
+        result = analyze_investment("AAPL", include_report=False, include_synthesis=True)
+
+    assert result["synthesis"]["status"] == "ok"
+    assert result["synthesis"]["data"]["executive_summary"] == fake_synthesis_data["executive_summary"]
+    assert result["agents"]["price"]["status"] == "ok"
+    assert result["agents"]["news"]["status"] == "ok"
+
+
+def test_advisor_synthesis_failure_preserves_agent_data():
+    with (
+        patch("app.agents.investment_advisor.analyze_stock", side_effect=fake_price),
+        patch("app.agents.investment_advisor.analyze_news", side_effect=fake_news),
+        patch(
+            "app.agents.investment_advisor.synthesize_research",
+            return_value={"status": "error", "data": None, "error": "Gemini unavailable"},
+        ),
+    ):
+        result = analyze_investment("AAPL", include_report=False, include_synthesis=True)
+
+    # Synthesis fails gracefully without crashing the advisor or erasing agent data
+    assert result["synthesis"]["status"] == "error"
+    assert result["synthesis"]["error"] == "Gemini unavailable"
+    assert result["agents"]["price"]["status"] == "ok"
+    assert result["agents"]["price"]["data"]["price"] == 150.0
+    assert result["agents"]["news"]["status"] == "ok"
+
